@@ -72,25 +72,11 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
-def depthFirstSearch(problem):
-    """
-    Search the deepest nodes in the search tree first.
-
-    Your search algorithm needs to return a list of actions that reaches the
-    goal. Make sure to implement a graph search algorithm.
-
-    To get started, you might want to try some of these simple commands to
-    understand the search problem that is being passed in:
-
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-    """
-    "*** YOUR CODE HERE ***"
+def xFirstSearchHelper(problem, frontierType):
     node_idx = 0
     path_idx = 1
 
-    frontier = util.Stack()
+    frontier = frontierType
     visited = set()
 
     frontier.push((problem.getStartState(), []))
@@ -106,55 +92,32 @@ def depthFirstSearch(problem):
     
     return []
 
+def depthFirstSearch(problem):
+    """
+    Search the deepest nodes in the search tree first.
+
+    Your search algorithm needs to return a list of actions that reaches the
+    goal. Make sure to implement a graph search algorithm.
+
+    To get started, you might want to try some of these simple commands to
+    understand the search problem that is being passed in:
+
+    print("Start:", problem.getStartState())
+    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+    """
+    "*** YOUR CODE HERE ***"
+    return xFirstSearchHelper(problem, util.Stack())
+
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    node_idx = 0
-    path_idx = 1
-
-    frontier = util.Queue()
-    visited = set()
-
-    frontier.push((problem.getStartState(), []))
-
-    while not frontier.isEmpty():
-        node, path = frontier.pop()
-        if problem.isGoalState(node):
-            return path
-        if node not in visited:
-            visited.add(node)
-            for child in problem.getSuccessors(node):
-                frontier.push((child[node_idx], path + [child[path_idx]]))
-
-    return []
+    return xFirstSearchHelper(problem, util.Queue())
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    node_idx = 0
-    path_idx = 1
-    cost_idx = 2
-
-    frontier = util.PriorityQueue()
-    visited = set()
-    cost = dict()
-
-    frontier.push((problem.getStartState(), []), 0)
-    cost[problem.getStartState()] = 0
-
-    while not frontier.isEmpty():
-        node, path = frontier.pop()
-        if problem.isGoalState(node):
-            return path
-        if node not in visited:
-            visited.add(node)
-            for child in problem.getSuccessors(node):
-                if child[node_idx] not in visited:
-                    if child[node_idx] not in cost or cost[child[node_idx]] > cost[node] + child[cost_idx]:
-                        cost[child[node_idx]] = cost[node] + child[cost_idx]
-                        frontier.push((child[node_idx], path + [child[path_idx]]), cost[child[node_idx]])
-
-    return []
+    return aStarSearch(problem)
 
 def nullHeuristic(state, problem=None):
     """
@@ -166,8 +129,6 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    # implement A* (A-start) search
-
     node_idx = 0
     path_idx = 1
     cost_idx = 2
