@@ -19,6 +19,10 @@ Pacman agents (in searchAgents.py).
 
 import util
 
+node_idx = 0
+path_idx = 1
+cost_idx = 2
+
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -72,14 +76,29 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
-def xFirstSearchHelper(problem, frontierType):
-    node_idx = 0
-    path_idx = 1
+def nullHeuristic(state, problem=None):
+    """
+    A heuristic function estimates the cost from the current state to the nearest
+    goal in the provided SearchProblem.  This heuristic is trivial.
+    """
+    return 0
 
+def costFunctionHelper(problem, frontier, visited, cost, node, path, child, heuristic=nullHeuristic):
+    if child[node_idx] not in visited:
+        if child[node_idx] not in cost or cost[child[node_idx]] > cost[node] + child[cost_idx]:
+            cost[child[node_idx]] = cost[node] + child[cost_idx]
+            frontier.push((child[node_idx], path + [child[path_idx]]), cost[child[node_idx]] + heuristic(child[node_idx], problem))
+
+def uninformedSearchHelper(problem, frontierType, isCostFunction=False, heuristic=nullHeuristic):
     frontier = frontierType
     visited = set()
 
-    frontier.push((problem.getStartState(), []))
+    if isCostFunction:
+        cost = dict()
+        cost[problem.getStartState()] = 0
+        frontier.push((problem.getStartState(), []), 0)
+    else:
+        frontier.push((problem.getStartState(), []))
 
     while not frontier.isEmpty():
         node, path = frontier.pop()
@@ -88,7 +107,10 @@ def xFirstSearchHelper(problem, frontierType):
         if node not in visited:
             visited.add(node)
             for child in problem.getSuccessors(node):
-                frontier.push((child[node_idx], path + [child[path_idx]]))
+                if isCostFunction:
+                    costFunctionHelper(problem, frontier, visited, cost, node, path, child, heuristic) 
+                else:
+                    frontier.push((child[node_idx], path + [child[path_idx]]))
     
     return []
 
@@ -107,52 +129,22 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    return xFirstSearchHelper(problem, util.Stack())
+    return uninformedSearchHelper(problem, util.Stack())
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    return xFirstSearchHelper(problem, util.Queue())
+    return uninformedSearchHelper(problem, util.Queue())
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     return aStarSearch(problem)
 
-def nullHeuristic(state, problem=None):
-    """
-    A heuristic function estimates the cost from the current state to the nearest
-    goal in the provided SearchProblem.  This heuristic is trivial.
-    """
-    return 0
-
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    node_idx = 0
-    path_idx = 1
-    cost_idx = 2
-
-    frontier = util.PriorityQueue()
-    visited = set()
-    cost = dict()
-
-    frontier.push((problem.getStartState(), []), 0)
-    cost[problem.getStartState()] = 0
-
-    while not frontier.isEmpty():
-        node, path = frontier.pop()
-        if problem.isGoalState(node):
-            return path
-        if node not in visited:
-            visited.add(node)
-            for child in problem.getSuccessors(node):
-                if child[node_idx] not in visited:
-                    if child[node_idx] not in cost or cost[child[node_idx]] > cost[node] + child[cost_idx]:
-                        cost[child[node_idx]] = cost[node] + child[cost_idx]
-                        frontier.push((child[node_idx], path + [child[path_idx]]), cost[child[node_idx]] + heuristic(child[node_idx], problem))
-
-    return []
+    return uninformedSearchHelper(problem, util.PriorityQueue(), True, heuristic)
 
 
 # Abbreviations
