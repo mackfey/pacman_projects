@@ -19,9 +19,12 @@ Pacman agents (in searchAgents.py).
 
 import util
 
-node_idx = 0
-path_idx = 1
-cost_idx = 2
+"""
+Global constants used to track state indexes in the frontier data structure.
+"""
+getNode = 0
+getPath = 1
+getCost = 2
 
 class SearchProblem:
     """
@@ -83,14 +86,42 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
-def costFunctionHelper(problem, frontier, visited, cost, node, path, child, heuristic=nullHeuristic):
-    if child[node_idx] not in visited:
-        if child[node_idx] not in cost or cost[child[node_idx]] > cost[node] + child[cost_idx]:
-            cost[child[node_idx]] = cost[node] + child[cost_idx]
-            frontier.push((child[node_idx], path + [child[path_idx]]), cost[child[node_idx]] + heuristic(child[node_idx], problem))
+def costFunctionHelper(problem, frontier, visited, cost, state, path, successor, heuristic=nullHeuristic):
+    """
+    Helper function for cost functions for adding states to the frontier.
 
-def uninformedSearchHelper(problem, frontierType, isCostFunction=False, heuristic=nullHeuristic):
-    frontier = frontierType
+    Args:
+        problem: The search problem.
+        frontier: The frontier data structure.
+        visited: The set of visited states.
+        cost: The dictionary of costs for each state.
+        state: The current state.
+        path: The current path.
+        successor: The successor state.
+        heuristic: The heuristic function.
+
+    Returns:
+        None
+    """
+    if successor[getNode] not in visited:
+        if successor[getNode] not in cost or cost[successor[getNode]] > cost[state] + successor[getCost]:
+            cost[successor[getNode]] = cost[state] + successor[getCost]
+            frontier.push((successor[getNode], path + [successor[getPath]]), cost[successor[getNode]] + heuristic(successor[getNode], problem))
+
+def searchHelper(problem, frontierDataStructure, isCostFunction=False, heuristic=nullHeuristic):
+    """
+    Helper function for search algorithms. Generic search algorithm that is called by each search algorithm.
+
+    Args:
+        problem: The search problem.
+        frontierDataStructure: The frontier data structure (stack, queue, priority queue, etc).
+        isCostFunction: Boolean value that determines whether the search algorithm is a cost function.
+        heuristic: The heuristic function.
+
+    Returns:
+        The path to the goal state.
+    """
+    frontier = frontierDataStructure
     visited = set()
 
     if isCostFunction:
@@ -101,16 +132,16 @@ def uninformedSearchHelper(problem, frontierType, isCostFunction=False, heuristi
         frontier.push((problem.getStartState(), []))
 
     while not frontier.isEmpty():
-        node, path = frontier.pop()
-        if problem.isGoalState(node):
+        state, path = frontier.pop()
+        if problem.isGoalState(state):
             return path
-        if node not in visited:
-            visited.add(node)
-            for child in problem.getSuccessors(node):
+        if state not in visited:
+            visited.add(state)
+            for successor in problem.getSuccessors(state):
                 if isCostFunction:
-                    costFunctionHelper(problem, frontier, visited, cost, node, path, child, heuristic) 
+                    costFunctionHelper(problem, frontier, visited, cost, state, path, successor, heuristic) 
                 else:
-                    frontier.push((child[node_idx], path + [child[path_idx]]))
+                    frontier.push((successor[getNode], path + [successor[getPath]]))
     
     return []
 
@@ -129,12 +160,12 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    return uninformedSearchHelper(problem, util.Stack())
+    return searchHelper(problem, util.Stack())
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    return uninformedSearchHelper(problem, util.Queue())
+    return searchHelper(problem, util.Queue())
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
@@ -144,7 +175,7 @@ def uniformCostSearch(problem):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    return uninformedSearchHelper(problem, util.PriorityQueue(), True, heuristic)
+    return searchHelper(problem, util.PriorityQueue(), True, heuristic)
 
 
 # Abbreviations
