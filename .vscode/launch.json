@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/search/pacman.py",
+            "cwd": "${workspaceFolder}/search",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            //"args": ["-l", "tinyCorners", "-p", "SearchAgent", "-a", "fn=bfs,prob=CornersProblem"]
+            //"args": ["-l", "bigMaze", "-p", "SearchAgent", "-a", "fn=bfs", "-z", ".5"]
+            //"args": ["-l", "mediumCorners", "-p", "AStarCornersAgent", "-z", "0.5"]
+            //"args": ["-l", "trickySearch", "-p", "AStarFoodSearchAgent"]
+            "args": ["-l", "bigSearch", "-p", "ClosestDotSearchAgent", "-z", ".5"]
+        }
+    ]
+}
