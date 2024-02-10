@@ -199,7 +199,60 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        depth = self.depth * gameState.getNumAgents()
+        return self.maxValue(gameState, depth, 0, float('-inf'), float('inf'))[1]
+
+    def alphaBetaPrune(self, gameState, depth, agentIndex, alpha, beta):
+        """
+        Returns the alpha-beta pruned value of the given gameState at the given depth and agentIndex
+        """
+        if depth == 0 or gameState.isWin() or gameState.isLose():
+            return self.evaluationFunction(gameState)
+
+        if agentIndex == 0:
+            return self.maxValue(gameState, depth, agentIndex, alpha, beta)[0]
+        else:
+            return self.minValue(gameState, depth, agentIndex, alpha, beta)[0]
+        
+    def maxValue(self, gameState, depth, agentIndex, alpha, beta):
+        """
+        Returns the max value of the given gameState at the given depth and agentIndex
+        """
+        v = (float('-inf'), None)
+        
+        return self.valueHelper(gameState, depth, agentIndex, v, alpha, beta)
+    
+    def minValue(self, gameState, depth, agentIndex, alpha, beta):
+        """
+        Returns the min value of the given gameState at the given depth and agentIndex
+        """
+        v = (float('inf'), None)
+        
+        return self.valueHelper(gameState, depth, agentIndex, v, alpha, beta)
+    
+    def valueHelper(self, gameState, depth, agentIndex, v, alpha, beta):
+        """
+        Returns the value of the given gameState at the given depth and agentIndex
+        """
+        valueFunction = max if agentIndex == 0 else min
+
+        for action in gameState.getLegalActions(agentIndex):
+            successor = gameState.generateSuccessor(agentIndex, action)
+            nextAgentIndex = (agentIndex + 1) % gameState.getNumAgents()
+            v = valueFunction(v, 
+                              (self.alphaBetaPrune(successor, depth - 1, nextAgentIndex, alpha, beta), action), 
+                              key=lambda x: x[0])
+            
+            if agentIndex == 0:
+                if v[0] > beta:
+                    return v
+                alpha = valueFunction(alpha, v[0])
+            else:
+                if v[0] < alpha:
+                    return v
+                beta = valueFunction(beta, v[0])
+        
+        return v
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
