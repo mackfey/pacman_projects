@@ -204,7 +204,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
     def alphaBetaPrune(self, gameState, depth, agentIndex, alpha, beta):
         """
-        Returns the alpha-beta pruned value of the given gameState at the given depth and agentIndex
+        Returns the alpha-beta pruned value of the given gameState at the given depth and agentIndex with alpha-beta pruning
         """
         if depth == 0 or gameState.isWin() or gameState.isLose():
             return self.evaluationFunction(gameState)
@@ -216,7 +216,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         
     def maxValue(self, gameState, depth, agentIndex, alpha, beta):
         """
-        Returns the max value of the given gameState at the given depth and agentIndex
+        Returns the max value of the given gameState at the given depth and agentIndex with alpha-beta pruning
         """
         v = (float('-inf'), None)
         
@@ -224,7 +224,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     
     def minValue(self, gameState, depth, agentIndex, alpha, beta):
         """
-        Returns the min value of the given gameState at the given depth and agentIndex
+        Returns the min value of the given gameState at the given depth and agentIndex with alpha-beta pruning
         """
         v = (float('inf'), None)
         
@@ -232,7 +232,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     
     def valueHelper(self, gameState, depth, agentIndex, v, alpha, beta):
         """
-        Returns the value of the given gameState at the given depth and agentIndex
+        Returns the value of the given gameState at the given depth and agentIndex with alpha-beta pruning
         """
         valueFunction = max if agentIndex == 0 else min
 
