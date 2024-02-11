@@ -353,13 +353,13 @@ def betterEvaluationFunction(currentGameState):
 
     return currentGameState.getScore() \
         + 1.0 / 10**(minFoodDistance+1) \
-        + 1.0 / 10**(numFood+1) \
+        + 1.0 / (numFood+1) \
         + 1.0 / (minGhostDistance+1) \
         + 1.0 / (minScaredGhostDistance+1) \
-        + 1.0 / 2**(numScaredGhosts+1) \
+        + 1.0 / (numScaredGhosts+1) \
         + 1.0 / (numNonScaredGhosts+1)**2 \
         + 1.0 / 1.5**(minCapsuleDistance+1) \
-        + 1.0 / 1.5**(numCapsules+1) \
+        + 1.0 / (numCapsules+1) \
 
 # Abbreviation
 better = betterEvaluationFunction
