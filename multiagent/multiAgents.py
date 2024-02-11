@@ -267,7 +267,54 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        depth = self.depth * gameState.getNumAgents()
+        return self.maxValue(gameState, depth, 0)[1]
+        
+    def expectimax(self, gameState, depth, agentIndex):
+        """
+        Returns the expectimax value of the given gameState at the given depth and agentIndex
+        """
+        if depth == 0 or gameState.isWin() or gameState.isLose():
+            return self.evaluationFunction(gameState)
+
+        if agentIndex == 0:
+            return self.maxValue(gameState, depth, agentIndex)[0]
+        else:
+            return self.expValue(gameState, depth, agentIndex)
+        
+    def maxValue(self, gameState, depth, agentIndex):
+        """
+        Returns the max value of the given gameState at the given depth and agentIndex
+        """
+        v = (float('-inf'), None)
+        
+        return self.valueHelper(gameState, depth, agentIndex, v, max)
+    
+    def expValue(self, gameState, depth, agentIndex):
+        """
+        Returns the expected value of the given gameState at the given depth and agentIndex
+        """
+        v = 0
+        
+        for action in gameState.getLegalActions(agentIndex):
+            successor = gameState.generateSuccessor(agentIndex, action)
+            nextAgentIndex = (agentIndex + 1) % gameState.getNumAgents()
+            v += self.expectimax(successor, depth - 1, nextAgentIndex)
+        
+        return v / len(gameState.getLegalActions(agentIndex))
+    
+    def valueHelper(self, gameState, depth, agentIndex, v, valueFunction):
+        """
+        Returns the value of the given gameState at the given depth and agentIndex
+        """
+        for action in gameState.getLegalActions(agentIndex):
+            successor = gameState.generateSuccessor(agentIndex, action)
+            nextAgentIndex = (agentIndex + 1) % gameState.getNumAgents()
+            v = valueFunction(v, 
+                              (self.expectimax(successor, depth - 1, nextAgentIndex), action), 
+                              key=lambda x: x[0])
+        
+        return v
 
 def betterEvaluationFunction(currentGameState):
     """
@@ -277,7 +324,42 @@ def betterEvaluationFunction(currentGameState):
     DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    newPos = currentGameState.getPacmanPosition()
+    newFood = currentGameState.getFood()
+    newGhostStates = currentGameState.getGhostStates()
+    newCapsules = currentGameState.getCapsules()
+    minFoodDistance = minGhostDistance = minCapsuleDistance = minScaredGhostDistance = minScaredGhostTimer = float('inf')
+    numFood = numCapsules = numScaredGhosts = numNonScaredGhosts = 0
+
+    for food in newFood.asList():
+        minFoodDistance = min([manhattanDistance(newPos, food)])
+        numFood += 1
+
+    for ghost in newGhostStates:
+        minGhostDistance = min([manhattanDistance(newPos, ghost.getPosition())])
+        if ghost.scaredTimer > 0:
+            numScaredGhosts += 1
+            minScaredGhostDistance = min([manhattanDistance(newPos, ghost.getPosition())])
+            minScaredGhostTimer = min([ghost.scaredTimer])
+        else:
+            numNonScaredGhosts += 1
+
+    for capsule in newCapsules:
+        minCapsuleDistance = min([manhattanDistance(newPos, capsule)])
+        numCapsules += 1
+
+    #print all the values from the return statement below to see the values of the variables
+    #print(minFoodDistance, numFood, minGhostDistance, minScaredGhostDistance, numScaredGhosts, numNonScaredGhosts, minCapsuleDistance, numCapsules)
+
+    return currentGameState.getScore() \
+        + 1.0 / 10**(minFoodDistance+1) \
+        + 1.0 / 10**(numFood+1) \
+        + 1.0 / (minGhostDistance+1) \
+        + 1.0 / (minScaredGhostDistance+1) \
+        + 1.0 / 2**(numScaredGhosts+1) \
+        + 1.0 / (numNonScaredGhosts+1)**2 \
+        + 1.0 / 1.5**(minCapsuleDistance+1) \
+        + 1.0 / 1.5**(numCapsules+1) \
 
 # Abbreviation
 better = betterEvaluationFunction
