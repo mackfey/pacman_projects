@@ -321,7 +321,9 @@ def betterEvaluationFunction(currentGameState):
     Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
     evaluation function (question 5).
 
-    DESCRIPTION: <write something here so we know what you did>
+    DESCRIPTION: Similar to reflex agent, but with more variables to consider. 
+    Tinkered with the weights of the variables to get a better score.
+    Had some success with using non-linear weights for the variables.
     """
     "*** YOUR CODE HERE ***"
     newPos = currentGameState.getPacmanPosition()
