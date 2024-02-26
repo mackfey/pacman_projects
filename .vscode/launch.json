@@ -46,6 +46,26 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             "args": ["-q", "q5", "--no-graphics"]
+        },
+        {
+            "name": "Python: reinforcement",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/reinforcement/autograder.py",
+            "cwd": "${workspaceFolder}/reinforcement",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": ["gridworld.py", "-a", "value", "-i", "100", "-k", "10"]
+        },
+        {
+            "name": "Python: reinforcement autograder",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/reinforcement/autograder.py",
+            "cwd": "${workspaceFolder}/reinforcement",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": ["-q", "q1"]
         }
     ]
 }
