@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Python: search",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/search/pacman.py",
@@ -17,6 +17,35 @@
             //"args": ["-l", "mediumCorners", "-p", "AStarCornersAgent", "-z", "0.5"]
             //"args": ["-l", "trickySearch", "-p", "AStarFoodSearchAgent"]
             "args": ["-l", "bigSearch", "-p", "ClosestDotSearchAgent", "-z", ".5"]
+        },
+        {
+            "name": "Python: multiagent",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/multiagent/pacman.py",
+            "cwd": "${workspaceFolder}/multiagent",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            //"args": ["-l", "tinyCorners", "-p", "SearchAgent", "-a", "fn=bfs,prob=CornersProblem"]
+            //"args": ["-l", "bigMaze", "-p", "SearchAgent", "-a", "fn=bfs", "-z", ".5"]
+            //"args": ["-l", "mediumCorners", "-p", "AStarCornersAgent", "-z", "0.5"]
+            //"args": ["-l", "trickySearch", "-p", "AStarFoodSearchAgent"]
+            //"args": ["-l", "bigSearch", "-p", "ClosestDotSearchAgent", "-z", ".5"]
+            //"args": ["-p", "ReflexAgent", "-l", "testClassic"]
+            //"args": ["-p", "MinimaxAgent", "-l", "smallClassic", "-a", "depth=4"]
+            //"args": ["-p", "AlphaBetaAgent", "-l", "smallClassic", "-a", "depth=3"]
+
+            "args": ["-p", "ExpectimaxAgent", "-l", "smallClassic", "-a", "depth=3"]
+        },
+        {
+            "name": "Python: multiagent autograder",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/multiagent/autograder.py",
+            "cwd": "${workspaceFolder}/multiagent",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": ["-q", "q5", "--no-graphics"]
         }
     ]
 }
