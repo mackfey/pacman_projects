@@ -434,7 +434,7 @@ class JointParticleFilter(ParticleFilter):
 
         for i in range(numParticles):
             particle = []
-            for j in range(self.numGhosts):
+            for _ in range(self.numGhosts):
                 particle.append(legalPositions[i % numLegalPositions])
             self.particles.append(tuple(particle))
 
