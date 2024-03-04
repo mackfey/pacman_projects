@@ -66,6 +66,26 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             "args": ["-q", "q1"]
+        },
+        {
+            "name": "Python: ghostbusters",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/ghostbusters/autograder.py",
+            "cwd": "${workspaceFolder}/ghostbusters",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": ["-q", "q1"]
+        },
+        {
+            "name": "Python: ghostbusters autograder",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/ghostbusters/autograder.py",
+            "cwd": "${workspaceFolder}/ghostbusters",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": ["-q", "q9"]
         }
     ]
 }
